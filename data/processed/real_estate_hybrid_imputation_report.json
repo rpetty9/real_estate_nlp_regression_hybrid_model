@@ -1,0 +1,109 @@
+{
+  "row_count": 75276,
+  "analysis_safe": {
+    "mode": "analysis_safe",
+    "targets": {
+      "beds": {
+        "missing_before": 13365,
+        "regex_imputed": 379,
+        "hybrid_model_imputed": 12986,
+        "missing_after": 0,
+        "structured_weight": 0.8,
+        "validation_mae": 0.4157
+      },
+      "baths": {
+        "missing_before": 12794,
+        "regex_imputed": 484,
+        "hybrid_model_imputed": 12310,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 0.3129
+      },
+      "sqft": {
+        "missing_before": 14674,
+        "regex_imputed": 784,
+        "hybrid_model_imputed": 13890,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 612.94
+      },
+      "garage": {
+        "missing_before": 30267,
+        "regex_imputed": 492,
+        "hybrid_model_imputed": 29775,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 0.43
+      },
+      "stories": {
+        "missing_before": 29665,
+        "regex_imputed": 1119,
+        "hybrid_model_imputed": 28546,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 0.3071
+      },
+      "year_built": {
+        "missing_before": 34453,
+        "regex_imputed": 1353,
+        "hybrid_model_imputed": 33100,
+        "missing_after": 0,
+        "structured_weight": 0.5,
+        "validation_mae": 17.2457
+      }
+    }
+  },
+  "price_model_safe": {
+    "mode": "price_model_safe",
+    "targets": {
+      "beds": {
+        "missing_before": 13365,
+        "regex_imputed": 379,
+        "hybrid_model_imputed": 12986,
+        "missing_after": 0,
+        "structured_weight": 0.8,
+        "validation_mae": 0.4086
+      },
+      "baths": {
+        "missing_before": 12794,
+        "regex_imputed": 484,
+        "hybrid_model_imputed": 12310,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 0.315
+      },
+      "sqft": {
+        "missing_before": 14674,
+        "regex_imputed": 784,
+        "hybrid_model_imputed": 13890,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 638.8914
+      },
+      "garage": {
+        "missing_before": 30267,
+        "regex_imputed": 492,
+        "hybrid_model_imputed": 29775,
+        "missing_after": 0,
+        "structured_weight": 1.0,
+        "validation_mae": 0.4286
+      },
+      "stories": {
+        "missing_before": 29665,
+        "regex_imputed": 1119,
+        "hybrid_model_imputed": 28546,
+        "missing_after": 0,
+        "structured_weight": 0.5,
+        "validation_mae": 0.315
+      },
+      "year_built": {
+        "missing_before": 34453,
+        "regex_imputed": 1353,
+        "hybrid_model_imputed": 33100,
+        "missing_after": 0,
+        "structured_weight": 0.3,
+        "validation_mae": 17.6357
+      }
+    }
+  }
+}

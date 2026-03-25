@@ -1,0 +1,24 @@
+{
+  "row_count_used": 75261,
+  "best_structured_weight_for_blend": 1.0,
+  "results": [
+    {
+      "model": "text_only",
+      "mae": 266321.33,
+      "rmse": 1033917.37,
+      "r2": 0.3391
+    },
+    {
+      "model": "structured_only",
+      "mae": 237816.06,
+      "rmse": 904248.09,
+      "r2": 0.4945
+    },
+    {
+      "model": "text_plus_structured",
+      "mae": 237816.06,
+      "rmse": 904248.09,
+      "r2": 0.4945
+    }
+  ]
+}

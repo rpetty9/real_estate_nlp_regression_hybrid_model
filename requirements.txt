@@ -1,0 +1,9 @@
+kaggle
+pandas
+pyarrow
+jupyter
+python-dotenv
+matplotlib
+seaborn
+scikit-learn
+streamlit

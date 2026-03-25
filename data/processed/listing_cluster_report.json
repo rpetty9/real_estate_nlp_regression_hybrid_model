@@ -1,0 +1,212 @@
+[
+  {
+    "cluster_id": 9,
+    "cluster_label": "New Construction / Planned Homes",
+    "row_count": 8680,
+    "avg_price": 1549235.4282,
+    "avg_quality": 99.4771,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "space",
+      "private",
+      "designed",
+      "offers",
+      "custom",
+      "suite",
+      "kitchen",
+      "of the"
+    ],
+    "cluster_x": 0.3326,
+    "cluster_y": -0.0316,
+    "cluster_z": -0.0059
+  },
+  {
+    "cluster_id": 5,
+    "cluster_label": "Everyday Residential Listings",
+    "row_count": 7359,
+    "avg_price": 641851.9327,
+    "avg_quality": 98.2085,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "you",
+      "has",
+      "large",
+      "to the",
+      "in the",
+      "that",
+      "kitchen",
+      "there"
+    ],
+    "cluster_x": 0.3279,
+    "cluster_y": -0.0046,
+    "cluster_z": 0.0803
+  },
+  {
+    "cluster_id": 3,
+    "cluster_label": "Land / Acreage",
+    "row_count": 7812,
+    "avg_price": 629830.8221,
+    "avg_quality": 93.974,
+    "dominant_type": "land",
+    "top_terms": [
+      "land",
+      "you",
+      "acres",
+      "the property",
+      "lake",
+      "this property",
+      "from",
+      "mountain"
+    ],
+    "cluster_x": 0.2514,
+    "cluster_y": 0.1586,
+    "cluster_z": 0.0036
+  },
+  {
+    "cluster_id": 0,
+    "cluster_label": "Upscale Finishes / Premium Homes",
+    "row_count": 8827,
+    "avg_price": 600551.2975,
+    "avg_quality": 96.5831,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "walk in",
+      "walk",
+      "bath",
+      "closet",
+      "suite",
+      "in closet",
+      "kitchen",
+      "floor"
+    ],
+    "cluster_x": 0.3039,
+    "cluster_y": -0.1201,
+    "cluster_z": 0.0601
+  },
+  {
+    "cluster_id": 7,
+    "cluster_label": "Builder / Template Copy",
+    "row_count": 251,
+    "avg_price": 577850.0996,
+    "avg_quality": 66.7291,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "specifications are",
+      "notice based",
+      "of veridian",
+      "prices promotions",
+      "promotions and",
+      "the discretion",
+      "discretion of",
+      "change at"
+    ],
+    "cluster_x": 0.1785,
+    "cluster_y": 0.0596,
+    "cluster_z": 0.0916
+  },
+  {
+    "cluster_id": 1,
+    "cluster_label": "Investment / Income Property",
+    "row_count": 4009,
+    "avg_price": 549617.0442,
+    "avg_quality": 87.8783,
+    "dominant_type": "multi_family",
+    "top_terms": [
+      "unit",
+      "income",
+      "units",
+      "rental",
+      "opportunity",
+      "investment",
+      "investors",
+      "potential"
+    ],
+    "cluster_x": 0.2119,
+    "cluster_y": 0.0798,
+    "cluster_z": -0.038
+  },
+  {
+    "cluster_id": 2,
+    "cluster_label": "Everyday Residential Listings",
+    "row_count": 11919,
+    "avg_price": 508970.0915,
+    "avg_quality": 84.5341,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "bedroom",
+      "bath",
+      "garage",
+      "new",
+      "large",
+      "has",
+      "floor",
+      "kitchen"
+    ],
+    "cluster_x": 0.1999,
+    "cluster_y": 0.0003,
+    "cluster_z": 0.0194
+  },
+  {
+    "cluster_id": 4,
+    "cluster_label": "Everyday Residential Listings",
+    "row_count": 11532,
+    "avg_price": 413060.786,
+    "avg_quality": 96.8479,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "space",
+      "perfect",
+      "offers",
+      "you",
+      "comfort",
+      "perfect for",
+      "entertaining",
+      "bedroom"
+    ],
+    "cluster_x": 0.311,
+    "cluster_y": -0.0252,
+    "cluster_z": -0.0965
+  },
+  {
+    "cluster_id": 8,
+    "cluster_label": "Everyday Residential Listings",
+    "row_count": 5475,
+    "avg_price": 370155.752,
+    "avg_quality": 94.2968,
+    "dominant_type": "single_family",
+    "top_terms": [
+      "new",
+      "updated",
+      "flooring",
+      "move",
+      "move in",
+      "ready",
+      "brand",
+      "brand new"
+    ],
+    "cluster_x": 0.2683,
+    "cluster_y": -0.0358,
+    "cluster_z": -0.0488
+  },
+  {
+    "cluster_id": 6,
+    "cluster_label": "New Construction / Planned Homes",
+    "row_count": 8493,
+    "avg_price": 362431.3038,
+    "avg_quality": 75.3148,
+    "dominant_type": "land",
+    "top_terms": [
+      "lot",
+      "build",
+      "lots",
+      "available",
+      "build your",
+      "acre",
+      "dream",
+      "dream home"
+    ],
+    "cluster_x": 0.1693,
+    "cluster_y": 0.1355,
+    "cluster_z": 0.0384
+  }
+]

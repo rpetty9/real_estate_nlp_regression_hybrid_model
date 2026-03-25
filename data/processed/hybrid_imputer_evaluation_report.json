@@ -1,0 +1,113 @@
+{
+  "sample_size_per_target": 800,
+  "results": [
+    {
+      "target": "beds",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.3262,
+      "mae": 0.4125,
+      "rmse": 0.8646,
+      "tolerance_accuracy": 0.9437
+    },
+    {
+      "target": "baths",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.2888,
+      "mae": 0.3006,
+      "rmse": 0.6317,
+      "tolerance_accuracy": 0.8862
+    },
+    {
+      "target": "sqft",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.1688,
+      "mae": 646.0725,
+      "rmse": 1321.4948,
+      "tolerance_accuracy": 0.4637
+    },
+    {
+      "target": "garage",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.3237,
+      "mae": 0.505,
+      "rmse": 1.3276,
+      "tolerance_accuracy": 0.9175
+    },
+    {
+      "target": "stories",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.0988,
+      "mae": 0.3644,
+      "rmse": 1.2053,
+      "tolerance_accuracy": 0.8825
+    },
+    {
+      "target": "year_built",
+      "mode": "analysis_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.055,
+      "mae": 17.1775,
+      "rmse": 25.3999,
+      "tolerance_accuracy": 0.2825
+    },
+    {
+      "target": "beds",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.3262,
+      "mae": 0.4088,
+      "rmse": 0.8624,
+      "tolerance_accuracy": 0.9463
+    },
+    {
+      "target": "baths",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.2888,
+      "mae": 0.2988,
+      "rmse": 0.6334,
+      "tolerance_accuracy": 0.8938
+    },
+    {
+      "target": "sqft",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.1688,
+      "mae": 677.0525,
+      "rmse": 1340.1724,
+      "tolerance_accuracy": 0.4088
+    },
+    {
+      "target": "garage",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.3237,
+      "mae": 0.4875,
+      "rmse": 1.3029,
+      "tolerance_accuracy": 0.9287
+    },
+    {
+      "target": "stories",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.0988,
+      "mae": 0.3681,
+      "rmse": 1.2249,
+      "tolerance_accuracy": 0.885
+    },
+    {
+      "target": "year_built",
+      "mode": "price_model_safe",
+      "rows_evaluated": 800,
+      "regex_coverage": 0.055,
+      "mae": 17.3287,
+      "rmse": 25.3363,
+      "tolerance_accuracy": 0.2512
+    }
+  ]
+}
