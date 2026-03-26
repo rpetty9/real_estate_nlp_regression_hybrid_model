@@ -1552,6 +1552,11 @@ def render_nlp_explainer(table: pd.DataFrame) -> None:
         help="This focuses on fields where the listing text can plausibly contain direct or indirect clues about the missing value.",
         key="nlp_explainer_target",
     )
+    load_term_details = st.checkbox(
+        "Load term-level text contribution breakdowns",
+        value=False,
+        help="This trains a lightweight text-detail model on demand. Keep it off for the fastest hosted-app experience.",
+    )
 
     examples = build_nlp_influence_examples(table, explainer_target)
     if examples.empty:
@@ -1605,19 +1610,26 @@ def render_nlp_explainer(table: pd.DataFrame) -> None:
             known_clue_html = "".join(f'<span class="cue-chip">{html.escape(term)}</span>' for term in known_clue_terms[:10])
             st.markdown(known_clue_html, unsafe_allow_html=True)
         st.markdown(f'<div class="explain-text">{known_highlighted_text}</div>', unsafe_allow_html=True)
-        known_term_contrib = explain_text_prediction_terms(explainer_target, str(known_row.get("text_clean", known_row.get("text", ""))))
-        if not known_term_contrib.empty:
-            st.markdown("**Top text-model terms pushing this guess**")
-            term_view = known_term_contrib.copy()
-            term_view["contribution"] = term_view["contribution"].map(lambda x: f"{x:+.3f}")
-            term_view = term_view.rename(columns={"term": "Term", "contribution": "Contribution Toward Prediction"})
-            st.dataframe(term_view, width="stretch", hide_index=True)
-            st.caption(
-                "These are TF-IDF term contributions from the linear text model. Positive contributions push the text-only prediction upward for the selected field."
+        if load_term_details:
+            known_term_contrib = explain_text_prediction_terms(
+                explainer_target, str(known_row.get("text_clean", known_row.get("text", "")))
             )
+            if not known_term_contrib.empty:
+                st.markdown("**Top text-model terms pushing this guess**")
+                term_view = known_term_contrib.copy()
+                term_view["contribution"] = term_view["contribution"].map(lambda x: f"{x:+.3f}")
+                term_view = term_view.rename(columns={"term": "Term", "contribution": "Contribution Toward Prediction"})
+                st.dataframe(term_view, width="stretch", hide_index=True)
+                st.caption(
+                    "These are TF-IDF term contributions from the linear text model. Positive contributions push the text-only prediction upward for the selected field."
+                )
+            else:
+                st.caption(
+                    "This record does not expose especially interpretable text-term contributions, which is itself useful to know: sometimes the text-side prediction comes more from diffuse language patterns than one obvious phrase."
+                )
         else:
             st.caption(
-                "This record does not expose especially interpretable text-term contributions, which is itself useful to know: sometimes the text-side prediction comes more from diffuse language patterns than one obvious phrase."
+                "Turn on the term-level toggle above if you want the slower text-model contribution breakdown for this record."
             )
 
         known_snapshot = pd.DataFrame(
@@ -1676,16 +1688,21 @@ def render_nlp_explainer(table: pd.DataFrame) -> None:
         st.caption("No explicit clue phrase was matched by the explanation heuristics for this record.")
 
     st.markdown(f'<div class="explain-text">{highlighted_text}</div>', unsafe_allow_html=True)
-    missing_term_contrib = explain_text_prediction_terms(explainer_target, str(row.get("text_clean", row.get("text", ""))))
-    if not missing_term_contrib.empty:
-        st.markdown("**Top text-model terms pushing this missing-value guess**")
-        missing_term_view = missing_term_contrib.copy()
-        missing_term_view["contribution"] = missing_term_view["contribution"].map(lambda x: f"{x:+.3f}")
-        missing_term_view = missing_term_view.rename(columns={"term": "Term", "contribution": "Contribution Toward Prediction"})
-        st.dataframe(missing_term_view, width="stretch", hide_index=True)
+    if load_term_details:
+        missing_term_contrib = explain_text_prediction_terms(explainer_target, str(row.get("text_clean", row.get("text", ""))))
+        if not missing_term_contrib.empty:
+            st.markdown("**Top text-model terms pushing this missing-value guess**")
+            missing_term_view = missing_term_contrib.copy()
+            missing_term_view["contribution"] = missing_term_view["contribution"].map(lambda x: f"{x:+.3f}")
+            missing_term_view = missing_term_view.rename(columns={"term": "Term", "contribution": "Contribution Toward Prediction"})
+            st.dataframe(missing_term_view, width="stretch", hide_index=True)
+        else:
+            st.caption(
+                "No especially strong text-term contributions were available for this missing-value example."
+            )
     else:
         st.caption(
-            "No especially strong text-term contributions were available for this missing-value example."
+            "Leave the term-level toggle off for the lighter hosted-app walkthrough, or turn it on when you specifically want the term contribution breakdown."
         )
 
     explainer_snapshot = pd.DataFrame(
