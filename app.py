@@ -969,7 +969,7 @@ def build_cluster_projection_chart(clustered_table: pd.DataFrame, x_col: str, y_
         )
         .properties(height=height)
     )
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, width="stretch")
 
 
 def build_cluster_3d_chart(clustered_table: pd.DataFrame, cluster_df: pd.DataFrame, height: int = 520) -> None:
@@ -1299,24 +1299,27 @@ def render_cluster_analysis(cluster_df: pd.DataFrame, clustered_table: pd.DataFr
         """,
         unsafe_allow_html=True,
     )
-    st.info("This tab can take a minute or two to fully render the cluster visuals, especially right after the app launches. The 3D view is sampling and drawing a large number of listings in the browser.")
-    build_cluster_3d_chart(clustered_table, cluster_df, height=520)
-    st.caption(
-        "How to use the 3D view: drag to rotate, zoom in on dense groups, and hover over points to inspect which state, property type, and price range sit inside each language cluster."
-    )
-    st.markdown("#### Supporting 2D Projections")
-    st.markdown(
-        "These flatter views make it easier to see separation without perspective effects. If a cluster stays grouped across multiple projections, that is a stronger sign that the language segment is real."
-    )
-    build_cluster_projection_chart(clustered_table, "cluster_x", "cluster_y", height=420)
-    c1, c2 = st.columns(2)
-    with c1:
-        build_cluster_projection_chart(clustered_table, "cluster_x", "cluster_z", height=300)
-    with c2:
-        build_cluster_projection_chart(clustered_table, "cluster_y", "cluster_z", height=300)
-    st.caption(
-        "Interpretation: when the same colors form pockets across these projections, it suggests the text-defined segments are stable and meaningful rather than randomly mixed."
-    )
+    st.info("The cluster map is the heaviest view in the app. Load it on demand if you want the interactive geometry without slowing the rest of the dashboard.")
+    if st.checkbox("Load interactive cluster maps", value=False):
+        build_cluster_3d_chart(clustered_table, cluster_df, height=520)
+        st.caption(
+            "How to use the 3D view: drag to rotate, zoom in on dense groups, and hover over points to inspect which state, property type, and price range sit inside each language cluster."
+        )
+        st.markdown("#### Supporting 2D Projections")
+        st.markdown(
+            "These flatter views make it easier to see separation without perspective effects. If a cluster stays grouped across multiple projections, that is a stronger sign that the language segment is real."
+        )
+        build_cluster_projection_chart(clustered_table, "cluster_x", "cluster_y", height=420)
+        c1, c2 = st.columns(2)
+        with c1:
+            build_cluster_projection_chart(clustered_table, "cluster_x", "cluster_z", height=300)
+        with c2:
+            build_cluster_projection_chart(clustered_table, "cluster_y", "cluster_z", height=300)
+        st.caption(
+            "Interpretation: when the same colors form pockets across these projections, it suggests the text-defined segments are stable and meaningful rather than randomly mixed."
+        )
+    else:
+        st.caption("Turn on the toggle above when you want to load the 3D and 2D cluster geometry views.")
 
     st.subheader("Cluster Detail")
     options = {cluster_display_label(row): int(row["cluster_id"]) for _, row in cluster_view.sort_values("avg_price", ascending=False).iterrows()}
