@@ -5,7 +5,7 @@ Portfolio project built around one umbrella problem: turn messy multi-state real
 ## Links
 
 - GitHub repo: https://github.com/rpetty9/real_estate_nlp_regression_hybrid_model
-- Live app: add Streamlit deployment URL here after publish
+- Live app: https://real-estate-hybrid-model.streamlit.app/
 
 The repo is best understood as two connected modules:
 

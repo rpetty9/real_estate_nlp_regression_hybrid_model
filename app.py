@@ -218,6 +218,81 @@ def inject_styles() -> None:
             color: #486581;
             margin-bottom: 0;
         }
+        .spotlight-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.9rem;
+            margin: 0.4rem 0 1rem 0;
+        }
+        .spotlight-card {
+            padding: 1.1rem 1.15rem;
+            border-radius: 20px;
+            background: linear-gradient(160deg, rgba(255,255,255,0.95), rgba(236, 245, 240, 0.9));
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+        }
+        .spotlight-card h3 {
+            margin: 0 0 0.35rem 0;
+            color: #102a43;
+            font-size: 0.96rem;
+            letter-spacing: 0.01em;
+        }
+        .spotlight-value {
+            font-size: 2.05rem;
+            line-height: 1;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+        .spotlight-card p {
+            margin: 0;
+            color: #486581;
+            font-size: 0.95rem;
+        }
+        .summary-band {
+            padding: 1.1rem 1.15rem;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(16, 42, 67, 0.96), rgba(15, 118, 110, 0.88));
+            color: #f8fafc;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+            margin: 0.6rem 0 1rem 0;
+        }
+        .summary-band h3 {
+            margin: 0 0 0.35rem 0;
+            font-size: 1.08rem;
+            color: #f8fafc;
+        }
+        .summary-band p {
+            margin: 0;
+            color: rgba(248, 250, 252, 0.88);
+            line-height: 1.55;
+        }
+        .module-band {
+            padding: 1rem 1.05rem;
+            border-radius: 18px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            background: rgba(255, 255, 255, 0.88);
+            min-height: 160px;
+        }
+        .module-band h3 {
+            margin: 0 0 0.3rem 0;
+            color: #102a43;
+            font-size: 1rem;
+        }
+        .module-band p {
+            margin: 0.2rem 0 0 0;
+            color: #486581;
+            line-height: 1.55;
+        }
+        .module-kicker {
+            display: inline-block;
+            margin-bottom: 0.45rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: #0f766e;
+            text-transform: uppercase;
+        }
         .generated-copy {
             padding: 1rem 1.1rem;
             border-radius: 16px;
@@ -1633,22 +1708,28 @@ def render_project_info(
     price_df: pd.DataFrame,
     cluster_df: pd.DataFrame,
 ) -> None:
-    st.markdown(
-        '<div class="section-note">This first page is the project overview: what problem the portfolio piece tackles, what modeling ideas it demonstrates, and how the pieces fit together.</div>',
-        unsafe_allow_html=True,
-    )
     total_rows = len(analysis_df)
     states = analysis_df["state"].nunique()
     best_target = mode_summary_df.sort_values("tolerance_accuracy", ascending=False).iloc[0]
     best_price_model = price_df.sort_values("r2", ascending=False).iloc[0]
     richest_cluster = cluster_df.sort_values("avg_price", ascending=False).iloc[0]
+    total_missing_recovered = int(mode_summary_df["missing_before"].sum())
+    regex_recovered = int(mode_summary_df["regex_imputed"].sum())
+    hybrid_recovered = int(mode_summary_df["hybrid_model_imputed"].sum())
+    quality_share = float(analysis_df["is_quality_filtered_text"].mean()) if "is_quality_filtered_text" in analysis_df.columns else np.nan
+    top_cluster_terms = ", ".join(richest_cluster["top_terms"][:4]) if isinstance(richest_cluster["top_terms"], list) else str(richest_cluster["top_terms"])
+
+    st.markdown(
+        '<div class="section-note">This landing page is the fast portfolio summary: how messy the starting housing data was, what the hybrid pipeline repaired, and where the NLP layer proved genuinely useful.</div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         """
         <div class="hero">
             <span class="eyebrow">Portfolio Project</span>
             <h1>Real Estate Recovery And NLP Studio</h1>
-            <p>This is one umbrella project with two connected modules: a hybrid missing-data recovery system for structured housing fields, and an NLP enrichment layer for listing-language analysis, clustering, and record-level support.</p>
+            <p>This project turns messy cross-state real-estate listings into a usable modeling dataset, then shows where listing language adds value through recovery support, clustering, and market-facing interpretation.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -1680,149 +1761,177 @@ def render_project_info(
             help="The highest R² among the current price models. R² is useful for summarizing explained variance, but it can hide whether errors are still large in dollar terms.",
         )
 
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown(
-            """
-            <div class="info-card">
-                <h3>What This Project Is</h3>
-                <p>This portfolio project combines multiple state-level real-estate datasets, cleans and unifies them, then splits the work into two clear modules: structured-data recovery and NLP-based listing enrichment.</p>
+    st.markdown(
+        f"""
+        <div class="spotlight-grid">
+            <div class="spotlight-card">
+                <h3>Recovered targeted blanks</h3>
+                <div class="spotlight-value">{total_missing_recovered:,}</div>
+                <p>{regex_recovered:,} fields came directly from regex clues and {hybrid_recovered:,} came from the structured-plus-NLP recovery layer.</p>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with c2:
-        st.markdown(
-            """
-            <div class="info-card">
-                <h3>Why It Matters</h3>
-                <p>Real listing data is messy. Missing values, inconsistent text, and uneven schemas make downstream analysis weak. This project shows how to turn that into a usable modeling and decision-support dataset.</p>
+            <div class="spotlight-card">
+                <h3>Text quality kept usable</h3>
+                <div class="spotlight-value">{quality_share:.1%}</div>
+                <p>of listings still pass the quality filter, which is why the language layer can support enrichment instead of just adding noise.</p>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with c3:
-        st.markdown(
-            """
-            <div class="info-card">
-                <h3>What It Demonstrates</h3>
-                <p>Data cleaning, leakage-aware imputation, masked holdout evaluation, price modeling, clustering, and NLP-based description analysis, organized as one coherent workflow rather than two unrelated experiments.</p>
+            <div class="spotlight-card">
+                <h3>Premium language segment</h3>
+                <div class="spotlight-value">${richest_cluster['avg_price']:,.0f}</div>
+                <p>Top cluster: {richest_cluster['cluster_label']} with terms like {top_cluster_terms}.</p>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    st.subheader("What This Project Is Trying To Do")
-    st.write(
-        "The goal is to start with messy listing data, recover missing property attributes in a leakage-aware way, "
-        "measure how reliable those imputations are, and then use listing text to enrich the repaired dataset with "
-        "language-based insights. The pricing comparison is part of the evaluation story, but it is not the only test "
-        "of whether the NLP layer was useful."
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    st.subheader("Project Structure")
+    st.markdown(
+        f"""
+        <div class="summary-band">
+            <h3>What the project proves in one sentence</h3>
+            <p>The strongest story here is not just “I fit a model.” It is that you repaired a broken housing dataset at scale, evaluated those repairs with masked holdout tests, established a defensible structured pricing baseline, and then showed that the NLP layer adds its clearest value through recovery support, language segmentation, and interpretation.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    left_col, right_col = st.columns([1.25, 1])
+    recovery_view = mode_summary_df.copy()
+    recovery_view["Recovered by regex"] = recovery_view["regex_imputed"]
+    recovery_view["Recovered by hybrid model"] = recovery_view["hybrid_model_imputed"]
+    recovery_long = recovery_view.melt(
+        id_vars=["label", "tolerance_accuracy"],
+        value_vars=["Recovered by regex", "Recovered by hybrid model"],
+        var_name="Recovery path",
+        value_name="Recovered count",
+    )
+    recovery_chart = (
+        alt.Chart(recovery_long)
+        .mark_bar(cornerRadiusTopLeft=7, cornerRadiusTopRight=7)
+        .encode(
+            x=alt.X("Recovered count:Q", title="Recovered missing values"),
+            y=alt.Y("label:N", sort="-x", title=None),
+            color=alt.Color(
+                "Recovery path:N",
+                scale=alt.Scale(range=["#9bd4c7", "#0f766e"]),
+                legend=alt.Legend(title=None, orient="top"),
+            ),
+            tooltip=[
+                alt.Tooltip("label:N", title="Field"),
+                alt.Tooltip("Recovery path:N", title="Path"),
+                alt.Tooltip("Recovered count:Q", title="Recovered", format=","),
+            ],
+        )
+        .properties(height=320)
+    )
+
+    price_view = price_df.copy()
+    price_view["model_label"] = price_view["model"].map(
+        {
+            "text_only": "Text only",
+            "structured_only": "Structured only",
+            "text_plus_structured": "Text + structured",
+        }
+    ).fillna(price_view["model"])
+    price_chart = (
+        alt.Chart(price_view)
+        .mark_bar(cornerRadiusTopLeft=8, cornerRadiusTopRight=8)
+        .encode(
+            x=alt.X("model_label:N", title=None, sort=["Text only", "Structured only", "Text + structured"]),
+            y=alt.Y("r2:Q", title="Price model R²"),
+            color=alt.Color(
+                "model_label:N",
+                scale=alt.Scale(range=["#c7dfe6", "#2f5d62", "#0f766e"]),
+                legend=None,
+            ),
+            tooltip=[
+                alt.Tooltip("model_label:N", title="Model"),
+                alt.Tooltip("r2:Q", title="R²", format=".3f"),
+                alt.Tooltip("mae:Q", title="MAE", format=",.0f"),
+            ],
+        )
+        .properties(height=320)
+    )
+
+    with left_col:
+        st.subheader("Recovery Impact")
+        st.caption("How much of the missing-value problem each field actually had repaired.")
+        st.altair_chart(recovery_chart, width="stretch")
+    with right_col:
+        st.subheader("Pricing Readout")
+        st.caption("The honest bridge result: structured features still dominate pure pricing performance.")
+        st.altair_chart(price_chart, width="stretch")
+
+    module_c1, module_c2 = st.columns(2)
+    with module_c1:
+        st.markdown(
+            """
+            <div class="module-band">
+                <div class="module-kicker">Module 1</div>
+                <h3>Leakage-aware recovery system</h3>
+                <p>This side of the project repairs beds, baths, garage, stories, square footage, and year built using regex extraction plus structured and text-side predictions. The important point is not just completeness, but that the imputation story is evaluated directly instead of hand-waved.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with module_c2:
+        st.markdown(
+            """
+            <div class="module-band">
+                <div class="module-kicker">Module 2</div>
+                <h3>NLP layer with business-facing signal</h3>
+                <p>The text work adds value through language clustering, explanation examples, quality signals, and copy-pattern analysis. Even where text does not beat the structured price baseline, it still helps explain, segment, and interpret the marketplace.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.subheader("Market Language Footprint")
+    cluster_view = cluster_df.nlargest(6, "row_count").copy()
+    cluster_view["cluster_label_short"] = cluster_view["cluster_label"].str.replace(" / ", " / ", regex=False)
+    cluster_chart = (
+        alt.Chart(cluster_view)
+        .mark_circle(opacity=0.88, stroke="white", strokeWidth=1.2)
+        .encode(
+            x=alt.X("avg_quality:Q", title="Average listing quality"),
+            y=alt.Y("avg_price:Q", title="Average price"),
+            size=alt.Size("row_count:Q", title="Cluster size", scale=alt.Scale(range=[500, 3500])),
+            color=alt.Color("cluster_label_short:N", legend=alt.Legend(title="Cluster"), scale=alt.Scale(scheme="tealblues")),
+            tooltip=[
+                alt.Tooltip("cluster_label_short:N", title="Cluster"),
+                alt.Tooltip("row_count:Q", title="Listings", format=","),
+                alt.Tooltip("avg_price:Q", title="Avg price", format="$,.0f"),
+                alt.Tooltip("avg_quality:Q", title="Avg quality", format=",.1f"),
+            ],
+        )
+        .properties(height=360)
+    )
+    st.altair_chart(cluster_chart, width="stretch")
+    st.caption(
+        "This view is the fast proof that the language layer is not cosmetic. The clusters separate on both price and quality, which means the listing text is capturing meaningful market structure."
+    )
+
+    st.subheader("Quick Tour")
     module_map = pd.DataFrame(
         [
             {
-                "Module": "Module 1: Structured Recovery",
-                "Main question": "Can I repair important missing housing attributes without creating leakage problems?",
-                "What lives here": "Hybrid imputation, regex extraction, structured models, masked holdout evaluation, before-versus-after completeness gains.",
+                "Stop": "Project Overview",
+                "What to look for": "Fast visual read of recovery scale, pricing baseline, and cluster separation.",
             },
             {
-                "Module": "Module 2: NLP Enrichment",
-                "Main question": "Once the dataset is repaired, what useful signal lives in the listing language?",
-                "What lives here": "Text-based support for imputation, clustering, listing-quality analysis, amenity/copy patterns, and record-level explanation examples.",
+                "Stop": "Results",
+                "What to look for": "Before-vs-after missingness reduction, field-level imputation performance, and pricing comparison.",
+            },
+            {
+                "Stop": "NLP Detail",
+                "What to look for": "Record-level examples that show how listing text can support missing-value recovery.",
+            },
+            {
+                "Stop": "Cluster Analysis",
+                "What to look for": "3D and 2D views of description clusters that separate by property style, quality, and pricing profile.",
             },
         ]
     )
     st.dataframe(module_map, width="stretch", hide_index=True)
-
-    st.subheader("How I Attacked The Problem")
-    attack_plan = pd.DataFrame(
-        [
-            {
-                "Question I asked": "What am I actually starting with?",
-                "How I answered it": "Profiled the cross-state datasets, compared schemas, and measured missingness and text quality.",
-            },
-            {
-                "Question I asked": "Can I turn this into one usable dataset?",
-                "How I answered it": "Standardized the schema, unified fields across states, and created a combined cleaned table.",
-            },
-            {
-                "Question I asked": "How should I fill missing core attributes?",
-                "How I answered it": "Built Module 1: a hybrid imputer using regex extraction, structured models, and text-based models.",
-            },
-            {
-                "Question I asked": "Can I prove the imputer works?",
-                "How I answered it": "Ran masked holdout tests so the model had to recover values we already knew.",
-            },
-            {
-                "Question I asked": "What extra value does the text add after recovery?",
-                "How I answered it": "Built Module 2: compared price models, clustered listing language, and analyzed copy patterns from higher-value homes.",
-            },
-        ]
-    )
-    st.dataframe(attack_plan, width="stretch", hide_index=True)
-
-    st.subheader("Model Ideas Demonstrated")
-    model_ideas = pd.DataFrame(
-        [
-            {
-                "Component": "Module 1: Hybrid imputation system",
-                "What it does": "Fills missing beds, baths, sqft, garage, stories, and year built using regex extraction plus structured and NLP models.",
-                "Why it matters": "Shows nuanced data recovery instead of simple mean or median imputation.",
-            },
-            {
-                "Component": "Module 1: Masked holdout evaluation",
-                "What it does": "Hides known values and tests whether the imputer can recover them.",
-                "Why it matters": "Makes the imputation story measurable and credible.",
-            },
-            {
-                "Component": "Bridge evaluation: Price prediction comparison",
-                "What it does": "Compares text-only, structured-only, and blended price models.",
-                "Why it matters": "Shows whether listing text adds marginal pricing value beyond the repaired structured fields.",
-            },
-            {
-                "Component": "Module 2: Listing-language clustering",
-                "What it does": "Groups descriptions into themes like premium or distinctive listing styles.",
-                "Why it matters": "Demonstrates unsupervised NLP on real marketplace text.",
-            },
-            {
-                "Component": "Module 2: Amenity and copy pattern analysis",
-                "What it does": "Extracts recurring signals from higher-value listings and turns them into description guidance.",
-                "Why it matters": "Connects NLP output to a practical business use case.",
-            },
-            {
-                "Component": "Module 2: Semantic-search foundation",
-                "What it does": "Supports similar-listing search and future retrieval-style demos.",
-                "Why it matters": "Shows the project can evolve from analysis into product-like NLP applications.",
-            },
-        ]
-    )
-    st.dataframe(model_ideas, width="stretch", hide_index=True)
-
-    st.subheader("Current Headline Findings")
-    findings = pd.DataFrame(
-        [
-            {"Finding": "Module 1 headline", "Current readout": f"{best_target['label']} is the strongest imputed field at {best_target['tolerance_accuracy']:.1%} tolerance accuracy"},
-            {"Finding": "Bridge evaluation", "Current readout": f"{best_price_model['model']} is the strongest pricing setup with R2 of {best_price_model['r2']:.3f}"},
-            {"Finding": "Module 2 headline", "Current readout": f"Cluster {int(richest_cluster['cluster_id'])} has the highest average price, showing language-based grouping is meaningful"},
-        ]
-    )
-    st.dataframe(findings, width="stretch", hide_index=True)
-
-    st.subheader("Suggested Reading Order")
-    reading_order = pd.DataFrame(
-        [
-            {"Step": "1", "Where to go next": "Data Background + EDA", "Why it matters": "Shows the original mess and why simple row dropping was not a good solution."},
-            {"Step": "2", "Where to go next": "Game Plan", "Why it matters": "Explains why the project was intentionally split into recovery and NLP-enrichment modules."},
-            {"Step": "3", "Where to go next": "Results: Imputation", "Why it matters": "Shows Module 1, the hybrid recovery system, and the completeness gains it delivered."},
-            {"Step": "4", "Where to go next": "Results: Pricing", "Why it matters": "Shows the bridge evaluation and makes clear that structured features still dominate price prediction."},
-            {"Step": "5", "Where to go next": "Results: NLP", "Why it matters": "Shows Module 2, where text helps through clustering, quality analysis, and record-level support."},
-            {"Step": "6", "Where to go next": "Conclusions", "Why it matters": "Wraps up what each module accomplished and where the clearest business value sits."},
-        ]
-    )
-    st.dataframe(reading_order, width="stretch", hide_index=True)
 
     st.subheader("High-Level Workflow")
     workflow = pd.DataFrame(
