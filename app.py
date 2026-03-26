@@ -2857,7 +2857,13 @@ with results_tab:
     st.dataframe(bottom_line, width="stretch", hide_index=True)
 
 with explainer_tab:
-    render_nlp_explainer(analysis_imputed)
+    st.caption(
+        "The deep explainer trains lightweight text-side helpers on demand. Load it when you want the record-level walkthrough."
+    )
+    if st.checkbox("Load record-level NLP explainer", value=False):
+        render_nlp_explainer(analysis_imputed)
+    else:
+        st.info("Turn on the explainer above to load the record-level walkthrough.")
 
 with cluster_tab:
     render_cluster_analysis(cluster_df, clustered_table)
