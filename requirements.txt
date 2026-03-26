@@ -6,5 +6,5 @@ python-dotenv
 matplotlib
 seaborn
 scikit-learn
-streamlit
-altair<5
+streamlit==1.55.0
+altair==6.0.0
