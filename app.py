@@ -14,6 +14,7 @@ import streamlit.components.v1 as components
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 PROCESSED = PROJECT_ROOT / "data" / "processed"
+IS_HOSTED_APP = Path("/mount/src").exists()
 TARGET_ORDER = ["beds", "baths", "garage", "stories", "sqft", "year_built"]
 TARGET_LABELS = {
     "beds": "Bedrooms",
@@ -348,6 +349,33 @@ def load_reports() -> dict[str, object]:
     return reports
 
 
+def sample_table_for_app(df: pd.DataFrame, key: str) -> pd.DataFrame:
+    if df.empty or not IS_HOSTED_APP:
+        return df
+
+    limits = {
+        "combined_clean": 12000,
+        "analysis_imputed": 8000,
+        "price_safe_imputed": 8000,
+        "clustered": 10000,
+    }
+    limit = limits.get(key)
+    if limit is None or len(df) <= limit:
+        return df
+
+    if "state" in df.columns and df["state"].notna().any():
+        sampled = (
+            df.groupby("state", group_keys=False, dropna=False)
+            .apply(lambda part: part.sample(n=max(1, int(round(limit * len(part) / len(df)))), random_state=42))
+            .reset_index(drop=True)
+        )
+        if len(sampled) > limit:
+            sampled = sampled.sample(n=limit, random_state=42)
+        return sampled
+
+    return df.sample(n=limit, random_state=42).reset_index(drop=True)
+
+
 @st.cache_data
 def load_tables() -> dict[str, pd.DataFrame]:
     tables = {}
@@ -360,7 +388,7 @@ def load_tables() -> dict[str, pd.DataFrame]:
     for key, filename in parquet_files.items():
         path = PROCESSED / filename
         if path.exists():
-            tables[key] = pd.read_parquet(path)
+            tables[key] = sample_table_for_app(pd.read_parquet(path), key)
     return tables
 
 
