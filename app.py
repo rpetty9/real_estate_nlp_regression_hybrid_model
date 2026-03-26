@@ -1555,7 +1555,11 @@ def render_nlp_explainer(table: pd.DataFrame) -> None:
     load_term_details = st.checkbox(
         "Load term-level text contribution breakdowns",
         value=False,
-        help="This trains a lightweight text-detail model on demand. Keep it off for the fastest hosted-app experience.",
+        disabled=True,
+        help="Disabled in the hosted app because it requires fitting a live text-detail model and can overwhelm the deployment.",
+    )
+    st.caption(
+        "Term-level contribution breakdowns are disabled in the hosted app to keep this page stable. The main walkthrough still shows the record, the text clues, and the structured versus text-side guesses."
     )
 
     examples = build_nlp_influence_examples(table, explainer_target)
